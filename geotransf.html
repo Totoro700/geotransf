@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>geoemetry transformations</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <p>x:</p>
+        <input id="x">
+        <br>
+        <p>y:</p>
+        <input id="y">
+        <br>
+        <p>xv:</p>
+        <input id="xv">
+        <br>
+        <p>yv:</p>
+        <input id="yv">
+        <p>mode (translate, rotation, reflection, dilation; one at a time) rotations are ccw; put rotation degree and dilation in xv; put axis (x, y) in xv; rotation can only be 90, 180, or 270: </p>
+        <input id="mode">
+        <br>
+        <br>
+        <button onclick="whatamidoingwithmylife()">Calc</button>
+        <br>
+        <p id="iwannagosleep"></p>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var params = new URLSearchParams(window.location.search);
+                if (params.get("x") != null || params.get("y") != null || params.get("xv") != null || params.get("yv") != null || params.get("mode") != null) { // yv not required for rotation and dilation and reflection, just put anything
+                    calc(params.get("x"), params.get("y"), params.get("xv"), params.get("yv"), params.get("mode"))
+                }
+            });
+
+            function calc(x, y, xv, yv, mode) {
+                var output = document.getElementById("iwannagosleep");
+                if (mode == "translate") {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                    xv = parseInt(xv);
+                    yv = parseInt(yv);
+                    output.innerText = `(${x + xv}, ${y + yv})`;
+                } else if (mode == "rotation") {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                    if (xv == "90") {
+                        output.innerText = `(${-y}, ${x})`;
+                    } else if (xv == "180") {
+                        output.innerText = `(${-x}, ${-y})`;
+                    } else if (xv == "270") {
+                        output.innerText = `(${y}, ${-x})`;
+                    } else {
+                        output.innerText = "Invalid rotation amount, only 90, 180, or 270";
+                    }
+                } else if (mode == "dilation") {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                    xv = parseFloat(xv);
+                    output.innerText = `(${x * xv}, ${y * xv})`;
+                } else if (mode == "reflection") {
+                    if (xv == "x") {
+                        output.innerText = `(${x}, ${-y})`;
+                    } else if (xv == "y") {
+                        output.innerText = `(${-x}, ${y})`;
+                    } else {
+                        output.innerText = "Invalid axis";
+                    }
+                } else {
+                    output.innerText = "Invalid mode";
+                }
+            }
+
+            function whatamidoingwithmylife() {
+                calc(document.getElementById("x").value, document.getElementById("y").value, document.getElementById("xv").value, document.getElementById("yv").value, document.getElementById("mode").value);
+            }
+        </script>
+    </body>
+</html>
